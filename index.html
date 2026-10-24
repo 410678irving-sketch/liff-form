@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>正在轉址至表單...</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body style="display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif; background-color:#f5f5f5;">
+  <div style="text-align:center; padding:20px; background:white; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+    <p style="font-size:18px; color:#333;">正在自動驗證 LINE 身分並開啟表單...</p>
+    <p style="font-size:14px; color:#666;">請稍候，系統將自動為您帶入 User ID</p>
+  </div>
+
+  <script>
+    // ⚠️ 替換區（請改成您自己的資料）
+    const LIFF_ID = "2012185946-bR91NC1g"; // LINE Developers 取得的 LIFF ID
+    const FORM_URL_BASE = "https://docs.google.com/forms/d/e/1FAIpQLSee7SA8gPaLfmohWDVBD6v-VUS5Md3eNMh4RUgKxA3IOTBgEw/viewform?usp=pp_url&entry.263693685="; // 您的預先填入連結（刪除掉尾端的 USERID_HERE）
+
+    liff.init({ liffId: LIFF_ID })
+      .then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          liff.getProfile().then(profile => {
+            // 抓取 User ID 並自動跳轉至 Google 表單
+            window.location.href = FORM_URL_BASE + encodeURIComponent(profile.userId);
+          });
+        }
+      })
+      .catch(err => {
+        console.error("LIFF 載入失敗:", err);
+        alert("驗證失敗，請重新從 LINE 開啟連結");
+      });
+  </script>
+</body>
+</html>
